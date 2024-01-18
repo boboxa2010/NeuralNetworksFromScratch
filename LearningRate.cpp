@@ -11,8 +11,6 @@ double LearningRate::operator()() {
     return lambda_ * std::pow(s0_ / (s0_ + iteration_), power_);
 }
 
-LearningRate::LearningRate(double lambda, double s0, double power) : lambda_(lambda), s0_(s0), power_(power) {
-
+LearningRate::LearningRate(double lambda, double s0, double power)
+    : lambda_(lambda), s0_(s0), power_(power) {
 }
-
-

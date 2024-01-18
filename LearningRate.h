@@ -1,13 +1,13 @@
 #pragma once
 
-#include <cstddef>
 #include <cmath>
+#include <cstddef>
 
 namespace {
-    constexpr double kDefaultLambda = 1e-3;
-    constexpr double kDefaultS0 = 1;
-    constexpr double kDefaultPower = 0.5;
-}
+constexpr double kDefaultLambda = 1e-3;
+constexpr double kDefaultS0 = 1;
+constexpr double kDefaultPower = 0.5;
+}  // namespace
 
 class LearningRate {
 public:
