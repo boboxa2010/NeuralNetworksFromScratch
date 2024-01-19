@@ -5,9 +5,10 @@
 
 #include "Eigen/Eigen"
 
-using FuncT = std::function<double(double)>;
-
+namespace dl {
 class ActivationFunction {
+    using FuncT = std::function<double(double)>;
+
 public:
     ActivationFunction(const FuncT &function, const FuncT &derivative);
 
@@ -46,3 +47,5 @@ class LinearFunction : public ActivationFunction {
 public:
     LinearFunction();
 };
+
+}  // namespace dl

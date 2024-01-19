@@ -1,6 +1,7 @@
 #include "utils.h"
 
 #include "iostream"
+namespace dl {
 
 void AsciiRender(const Eigen::VectorXd &image, const Eigen::VectorXd &label) {
     for (size_t i = 0; i < 10; ++i) {
@@ -29,3 +30,5 @@ void AsciiRender(const Eigen::VectorXd &image, const Eigen::VectorXd &label) {
     }
     std::cout << '\n';
 }
+
+}  // namespace dl

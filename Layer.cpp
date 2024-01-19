@@ -2,6 +2,7 @@
 
 #include "EigenRand/EigenRand"
 
+namespace dl {
 namespace {
 Eigen::Rand::P8_mt19937_64 urng{42};
 }
@@ -46,3 +47,4 @@ void Layer::Update(const Eigen::MatrixXd &weights_grad, const Eigen::VectorXd &b
     weights_ -= learning_rate * weights_grad;
     bias_ -= learning_rate * bias_grad;
 }
+}  // namespace dl

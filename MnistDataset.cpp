@@ -1,7 +1,7 @@
 #include "MnistDataset.h"
 
 #include <fstream>
-
+namespace dl {
 namespace {
 enum {
     MNIST_IMAGE_MAGIC_NUMBER = 2051,
@@ -112,3 +112,4 @@ Data MnistDataset::LoadData(const std::filesystem::path &images_path,
     dataset.y = ReadLabels(labels_path);
     return dataset;
 }
+}  // namespace dl

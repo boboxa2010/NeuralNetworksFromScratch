@@ -3,6 +3,7 @@
 //
 
 #include "LearningRate.h"
+namespace dl {
 
 LearningRate::LearningRate() = default;
 
@@ -14,3 +15,4 @@ double LearningRate::operator()() {
 LearningRate::LearningRate(double lambda, double s0, double power)
     : lambda_(lambda), s0_(s0), power_(power) {
 }
+}  // namespace dl

@@ -2,6 +2,7 @@
 
 #include "Eigen/Eigen"
 
+namespace dl {
 class MSE {
 public:
     MSE() = default;
@@ -14,3 +15,4 @@ public:
 private:
     std::function<double(double, double)> derivative_;
 };
+}  // namespace dl

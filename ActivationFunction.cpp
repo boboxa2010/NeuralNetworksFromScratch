@@ -2,7 +2,8 @@
 
 #include <cmath>
 
-ActivationFunction::ActivationFunction(const FuncT& function, const FuncT& derivative)
+namespace dl {
+ActivationFunction::ActivationFunction(const FuncT &function, const FuncT &derivative)
     : function_(function), derivative_(derivative) {
 }
 
@@ -14,10 +15,8 @@ double ActivationFunction::ApplyDerivative(double x) const {
     return derivative_(x);
 }
 
-Eigen::MatrixXd ActivationFunction::GetDifferential(const Eigen::VectorXd& v) const {
-    auto result = v;
-    ApplyDerivative(result.data(), result.data() + result.size());
-    return result.asDiagonal();
+Eigen::MatrixXd ActivationFunction::GetDifferential(const Eigen::VectorXd &v) const {
+    return v.unaryExpr(function_).asDiagonal();
 }
 
 SigmoidFunction::SigmoidFunction()
@@ -33,3 +32,4 @@ ReLuFunction::ReLuFunction()
 LinearFunction::LinearFunction()
     : ActivationFunction([](double x) { return x; }, [](double x) { return 1; }) {
 }
+}  // namespace dl

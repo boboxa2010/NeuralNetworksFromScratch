@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstddef>
 
+namespace dl {
 namespace {
 constexpr double kDefaultLambda = 1e-3;
 constexpr double kDefaultS0 = 1;
@@ -23,3 +24,4 @@ private:
     double power_ = kDefaultPower;
     size_t iteration_ = 0;
 };
+}  // namespace dl
