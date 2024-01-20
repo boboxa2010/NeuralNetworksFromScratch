@@ -1,7 +1,7 @@
 #include "MnistDataset.h"
-
+#include "utils.h"
 #include <fstream>
-namespace dl {
+namespace project {
 namespace {
 enum {
     MNIST_IMAGE_MAGIC_NUMBER = 2051,
@@ -10,30 +10,18 @@ enum {
     MNIST_IMAGE_NUMBER_COLUMN = 28,
     MNIST_NUMBER_OF_PIXELS = 784,
 };
-constexpr double normalize_coefficient = 1.0 / 255.0;
 
-uint32_t ConvToLittleEndian(uint32_t n) {
-    char *bytes = reinterpret_cast<char *>(&n);
-    return (static_cast<uint8_t>(bytes[3]) | (static_cast<uint8_t>(bytes[2]) << 8) |
-            (static_cast<uint8_t>(bytes[1]) << 16) | (static_cast<uint8_t>(bytes[0]) << 24));
-}
+constexpr NumT kNormalizeCoefficient = 1.0 / 255.0;
 
-Eigen::VectorXd GetNormalizedImage(const std::array<uint8_t, MNIST_NUMBER_OF_PIXELS> &image) {
-    Eigen::VectorXd normalized_image(MNIST_NUMBER_OF_PIXELS);
+Vector GetNormalizedImage(const std::array<uint8_t, MNIST_NUMBER_OF_PIXELS> &image) {
+    Vector normalized_image(MNIST_NUMBER_OF_PIXELS);
     for (size_t i = 0; i < MNIST_NUMBER_OF_PIXELS; ++i) {
-        normalized_image[i] = normalize_coefficient * image[i];
+        normalized_image[i] = kNormalizeCoefficient * image[i];
     }
     return normalized_image;
 }
 
-Eigen::VectorXd OneHotEncoding(uint8_t object, size_t number_of_categories = 10) {
-    Eigen::VectorXd encoded(number_of_categories);
-    std::fill(encoded.data(), encoded.data() + encoded.size(), 0.0);
-    encoded[object] = 1.0;
-    return encoded;
-}
-
-std::vector<Eigen::VectorXd> ReadLabels(const std::filesystem::path &path) {
+std::vector<Vector> ReadLabels(const std::filesystem::path &path) {
     std::ifstream file;
     file.open(path, std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -52,16 +40,16 @@ std::vector<Eigen::VectorXd> ReadLabels(const std::filesystem::path &path) {
         throw std::invalid_argument{"Invalid format of input file"};
     }
 
-    std::vector<Eigen::VectorXd> labels;
+    std::vector<Vector> labels;
     uint8_t label = 0;
     for (size_t i = 0; i < number_of_labels; ++i) {
         file.read(reinterpret_cast<char *>(&label), sizeof(label));
-        labels.push_back(OneHotEncoding(label));
+        labels.push_back(OneHotEncoding(label, 10));
     }
     return labels;
 }
 
-std::vector<Eigen::VectorXd> ReadImages(const std::filesystem::path &path) {
+std::vector<Vector> ReadImages(const std::filesystem::path &path) {
     std::ifstream file;
     file.open(path, std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -94,7 +82,7 @@ std::vector<Eigen::VectorXd> ReadImages(const std::filesystem::path &path) {
         throw std::invalid_argument("Invalid height of input file");
     }
 
-    std::vector<Eigen::VectorXd> images;
+    std::vector<Vector> images;
     std::array<uint8_t, MNIST_IMAGE_NUMBER_COLUMN * MNIST_IMAGE_NUMBER_ROWS> image{};
     for (size_t i = 0; i < number_of_images; ++i) {
         file.read(reinterpret_cast<char *>(&image), image.size());

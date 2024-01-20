@@ -3,31 +3,31 @@
 #include <memory>
 
 #include "ActivationFunction.h"
-#include "Eigen/Eigen"
+#include "LearningRate.h"
 
-namespace dl {
+namespace project {
 class Layer {
 public:
     Layer();
 
-    Layer(size_t n, size_t m, std::unique_ptr<ActivationFunction> f);
+    Layer(size_t input_size, size_t output_size, std::unique_ptr<ActivationFunction> f);
 
-    Eigen::VectorXd Evaluate(const Eigen::VectorXd &x) const;
+    Vector Evaluate(const Vector &x) const noexcept;
 
-    Eigen::VectorXd EvaluateDerivative(const Eigen::VectorXd &x) const;
+    Vector EvaluateDerivative(const Vector &x) const noexcept;
 
-    Eigen::MatrixXd GetWeightsGradient(const Eigen::VectorXd &x, const Eigen::RowVectorXd &u) const;
+    Matrix GetWeightsGradient(const Vector &x, const RowVector &u) const noexcept;
 
-    Eigen::VectorXd GetBiasGradient(const Eigen::VectorXd &x, const Eigen::RowVectorXd &u) const;
+    Vector GetBiasGradient(const Vector &x, const RowVector &u) const noexcept;
 
-    Eigen::VectorXd GetNextGradient(const Eigen::VectorXd &x, const Eigen::RowVectorXd &u) const;
+    Vector GetNextGradient(const Vector &x, const RowVector &u) const noexcept;
 
-    void Update(const Eigen::MatrixXd &weights_grad, const Eigen::VectorXd &bias_grad,
-                double learning_rate);
+    void Update(const Matrix &weights_grad, const Vector &bias_grad,
+                LearningRate &learning_rate) noexcept;
 
 private:
-    Eigen::MatrixXd weights_;
-    Eigen::VectorXd bias_;
+    Matrix weights_;
+    Vector bias_;
     std::unique_ptr<ActivationFunction> function_;
 };
-}  // namespace dl
+}  // namespace project

@@ -1,18 +1,16 @@
-//
-// Created by ivan on 17/01/24.
-//
-
 #include "LearningRate.h"
-namespace dl {
+
+namespace project {
 
 LearningRate::LearningRate() = default;
 
-double LearningRate::operator()() {
+LearningRate::LearningRate(NumT lambda, NumT s0, NumT power)
+    : lambda_(lambda), s0_(s0), power_(power) {
+}
+
+NumT LearningRate::operator()() {
     ++iteration_;
     return lambda_ * std::pow(s0_ / (s0_ + iteration_), power_);
 }
 
-LearningRate::LearningRate(double lambda, double s0, double power)
-    : lambda_(lambda), s0_(s0), power_(power) {
-}
-}  // namespace dl
+}  // namespace project

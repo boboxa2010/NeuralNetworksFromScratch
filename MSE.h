@@ -1,18 +1,19 @@
 #pragma once
 
-#include "Eigen/Eigen"
+#include "declarations.h"
 
-namespace dl {
-class MSE {
-public:
-    MSE() = default;
+namespace project {
+    class MSE {
+        using FuncT = std::function<NumT(NumT, NumT)>;
+    public:
+        MSE();
 
-    double operator()(const Eigen::VectorXd &x, const Eigen::VectorXd &y) const;
+        NumT operator()(const Vector &x, const Vector &y) const noexcept;
 
-    Eigen::RowVectorXd GetGradient(const Eigen::VectorXd &predicted,
-                                   const Eigen::VectorXd &answer) const;
+        RowVector GetGradient(const Vector &predicted,
+                              const Vector &target) const noexcept;
 
-private:
-    std::function<double(double, double)> derivative_;
-};
+    private:
+        FuncT derivative_;
+    };
 }  // namespace dl

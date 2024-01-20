@@ -1,27 +1,24 @@
 #pragma once
 
-#include <cmath>
-#include <cstddef>
+#include "declarations.h"
 
-namespace dl {
-namespace {
-constexpr double kDefaultLambda = 1e-3;
-constexpr double kDefaultS0 = 1;
-constexpr double kDefaultPower = 0.5;
-}  // namespace
+namespace project {
+    class LearningRate {
+    public:
+        LearningRate();
 
-class LearningRate {
-public:
-    LearningRate();
+        LearningRate(NumT lambda, NumT s0, NumT power);
 
-    LearningRate(double lambda, double s0, double power);
+        NumT operator()();
 
-    double operator()();
+    private:
+        static constexpr NumT kDefaultLambda = 1e-3;
+        static constexpr NumT kDefaultS0 = 1;
+        static constexpr NumT kDefaultPower = 0.5;
 
-private:
-    double lambda_ = kDefaultLambda;
-    double s0_ = kDefaultS0;
-    double power_ = kDefaultPower;
-    size_t iteration_ = 0;
-};
+        NumT lambda_ = kDefaultLambda;
+        NumT s0_ = kDefaultS0;
+        NumT power_ = kDefaultPower;
+        size_t iteration_{0};
+    };
 }  // namespace dl

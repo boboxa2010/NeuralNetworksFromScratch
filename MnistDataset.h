@@ -3,13 +3,13 @@
 #include <filesystem>
 #include <vector>
 
-#include "Eigen/Eigen"
+#include "declarations.h"
 
-namespace dl {
+namespace project {
 
 struct Data {
-    std::vector<Eigen::VectorXd> X;
-    std::vector<Eigen::VectorXd> y;
+    std::vector<Vector> X;
+    std::vector<Vector> y;
 };
 
 class MnistDataset {

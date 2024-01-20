@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Eigen/Eigen"
+#include "declarations.h"
 
-namespace dl {
-void AsciiRender(const Eigen::VectorXd &image, const Eigen::VectorXd &label);
+namespace project {
+void AsciiRender(const Vector &image, const Vector &label);
+    uint32_t ConvToLittleEndian(uint32_t n);
+    Vector OneHotEncoding(uint8_t object, size_t number_of_categories);
 }

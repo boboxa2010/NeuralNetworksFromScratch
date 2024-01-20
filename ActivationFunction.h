@@ -3,30 +3,30 @@
 #include <algorithm>
 #include <functional>
 
-#include "Eigen/Eigen"
+#include "declarations.h"
 
-namespace dl {
+namespace project {
 class ActivationFunction {
-    using FuncT = std::function<double(double)>;
+    using FuncT = std::function<NumT(NumT)>;
 
 public:
     ActivationFunction(const FuncT &function, const FuncT &derivative);
 
-    double ApplyFunction(double x) const;
+    double ApplyFunction(NumT x) const;
 
-    double ApplyDerivative(double x) const;
+    double ApplyDerivative(NumT x) const;
 
     template <typename IterType>
     void ApplyFunction(IterType first, IterType last) const {
-        std::for_each(first, last, [this](double &x) { x = function_(x); });
+        std::for_each(first, last, [this](NumT &x) { x = function_(x); });
     }
 
     template <typename IterType>
     void ApplyDerivative(IterType first, IterType last) const {
-        std::for_each(first, last, [this](double &x) { x = derivative_(x); });
+        std::for_each(first, last, [this](NumT &x) { x = derivative_(x); });
     }
 
-    Eigen::MatrixXd GetDifferential(const Eigen::VectorXd &v) const;
+    Matrix GetDifferential(const Vector &v) const;
 
 private:
     FuncT function_;
@@ -48,4 +48,4 @@ public:
     LinearFunction();
 };
 
-}  // namespace dl
+}  // namespace project
