@@ -3,17 +3,17 @@
 #include "declarations.h"
 
 namespace project {
-    class MSE {
-        using FuncT = std::function<NumT(NumT, NumT)>;
-    public:
-        MSE();
+class MSE {
+    using FuncT = std::function<NumT(NumT, NumT)>;
 
-        NumT operator()(const Vector &x, const Vector &y) const noexcept;
+public:
+    MSE();
 
-        RowVector GetGradient(const Vector &predicted,
-                              const Vector &target) const noexcept;
+    NumT operator()(const Vector &x, const Vector &y) const noexcept;
 
-    private:
-        FuncT derivative_;
-    };
-}  // namespace dl
+    RowVector GetGradient(const Vector &predicted, const Vector &target) const noexcept;
+
+private:
+    FuncT derivative_;
+};
+}  // namespace project

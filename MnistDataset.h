@@ -17,4 +17,4 @@ public:
     static Data LoadData(const std::filesystem::path &images_path,
                          const std::filesystem::path &labels_path);
 };
-}  // namespace dl
+}  // namespace project

@@ -1,6 +1,8 @@
 #include "MnistDataset.h"
-#include "utils.h"
+
 #include <fstream>
+
+#include "utils.h"
 namespace project {
 namespace {
 enum {
@@ -100,4 +102,4 @@ Data MnistDataset::LoadData(const std::filesystem::path &images_path,
     dataset.y = ReadLabels(labels_path);
     return dataset;
 }
-}  // namespace dl
+}  // namespace project
