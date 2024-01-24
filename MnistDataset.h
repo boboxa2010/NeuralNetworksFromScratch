@@ -5,16 +5,12 @@
 
 #include "declarations.h"
 
-namespace project {
-
+namespace nn {
+namespace mnist {
 struct Data {
     std::vector<Vector> X;
     std::vector<Vector> y;
 };
-
-class MnistDataset {
-public:
-    static Data LoadData(const std::filesystem::path &images_path,
-                         const std::filesystem::path &labels_path);
-};
-}  // namespace project
+Data LoadData(const std::filesystem::path &images_path, const std::filesystem::path &labels_path);
+}  // namespace mnist
+}  // namespace nn

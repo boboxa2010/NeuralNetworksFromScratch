@@ -5,25 +5,25 @@
 
 #include "declarations.h"
 
-namespace project {
+namespace nn {
 class ActivationFunction {
-    using FuncT = std::function<NumT(NumT)>;
+    using FuncT = std::function<Scalar(Scalar)>;
 
 public:
     ActivationFunction(const FuncT &function, const FuncT &derivative);
 
-    double ApplyFunction(NumT x) const;
+    Scalar ApplyFunction(Scalar x) const;
 
-    double ApplyDerivative(NumT x) const;
+    Scalar ApplyDerivative(Scalar x) const;
 
     template <typename IterType>
     void ApplyFunction(IterType first, IterType last) const {
-        std::for_each(first, last, [this](NumT &x) { x = function_(x); });
+        std::for_each(first, last, [this](Scalar &x) { x = function_(x); });
     }
 
     template <typename IterType>
     void ApplyDerivative(IterType first, IterType last) const {
-        std::for_each(first, last, [this](NumT &x) { x = derivative_(x); });
+        std::for_each(first, last, [this](Scalar &x) { x = derivative_(x); });
     }
 
     Matrix GetDifferential(const Vector &v) const;
@@ -47,5 +47,4 @@ class LinearFunction : public ActivationFunction {
 public:
     LinearFunction();
 };
-
-}  // namespace project
+}  // namespace nn

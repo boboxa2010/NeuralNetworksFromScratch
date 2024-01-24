@@ -1,49 +1,57 @@
 #include "Layer.h"
 
-#include "EigenRand/EigenRand"
+#include "utils.h"
 
-namespace project {
-namespace {
-RandomSeed urng = 42;
+namespace nn {
+constexpr Input::Input(size_t size) : size(size) {
+}
+
+constexpr Output::Output(size_t size) : size(size) {
 }
 
 Layer::Layer() = default;
 
-Layer::Layer(size_t input_size, size_t output_size, std::unique_ptr<ActivationFunction> f)
+Layer::Layer(Input input, Output output, std::unique_ptr<ActivationFunction> f)
     : function_(std::move(f)),
-      weights_(Matrix{output_size, input_size}),
-      bias_(Vector{output_size}) {
-    weights_ = Eigen::Rand::normalLike(weights_, urng);
-    bias_ = Eigen::Rand::normalLike(bias_, urng);
+      weights_(GenerateRandNMatrix(output.size, input.size)),
+      bias_(GenerateRandNVector(output.size)) {
 }
 
-Eigen::VectorXd Layer::Evaluate(const Vector &x) const noexcept {
-    Eigen::VectorXd result = weights_ * x + bias_;
+Vector Layer::Evaluate(const Vector &x) const noexcept {
+    assert(x.size() == weights_.cols());
+    Vector result = weights_ * x + bias_;
     function_->ApplyFunction(result.data(), result.data() + result.size());
     return result;
 }
 
-Eigen::VectorXd Layer::EvaluateDerivative(const Vector &x) const noexcept {
-    Eigen::VectorXd result = weights_ * x + bias_;
+Vector Layer::EvaluateDerivative(const Vector &x) const noexcept {
+    assert(x.size() == weights_.cols());
+    Vector result = weights_ * x + bias_;
     function_->ApplyDerivative(result.data(), result.data() + result.size());
     return result;
 }
 
-Eigen::MatrixXd Layer::GetWeightsGradient(const Vector &x, const RowVector &u) const noexcept {
+Matrix Layer::GetWeightsGradient(const Vector &x, const RowVector &u) const noexcept {
     return GetBiasGradient(x, u) * x.transpose();
 }
 
-Eigen::VectorXd Layer::GetBiasGradient(const Vector &x, const RowVector &u) const noexcept {
+Vector Layer::GetBiasGradient(const Vector &x, const RowVector &u) const noexcept {
+    assert(x.size() == weights_.cols());
+    assert(u.size() == weights_.rows());
     return function_->GetDifferential(weights_ * x + bias_) * u.transpose();
 }
 
-Eigen::VectorXd Layer::GetNextGradient(const Vector &x, const RowVector &u) const noexcept {
+Vector Layer::GetNextGradient(const Vector &x, const RowVector &u) const noexcept {
+    assert(x.size() == weights_.cols());
+    assert(u.size() == weights_.rows());
     return u * function_->GetDifferential(weights_ * x + bias_) * weights_;
 }
 
 void Layer::Update(const Matrix &weights_grad, const Vector &bias_grad,
                    LearningRate &learning_rate) noexcept {
+    assert(weights_grad.rows() == weights_.rows() && weights_grad.cols() == weights_.cols());
+    assert(bias_grad.size() == bias_.size());
     weights_ -= learning_rate() * weights_grad;
     bias_ -= learning_rate() * bias_grad;
 }
-}  // namespace project
+}  // namespace nn

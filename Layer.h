@@ -5,12 +5,22 @@
 #include "ActivationFunction.h"
 #include "LearningRate.h"
 
-namespace project {
+namespace nn {
+struct Input {
+    constexpr explicit Input(size_t size);
+
+    size_t size;
+};
+struct Output {
+    constexpr explicit Output(size_t size);
+
+    size_t size;
+};
 class Layer {
 public:
     Layer();
 
-    Layer(size_t input_size, size_t output_size, std::unique_ptr<ActivationFunction> f);
+    Layer(Input input_size, Output output_size, std::unique_ptr<ActivationFunction> f);
 
     Vector Evaluate(const Vector &x) const noexcept;
 
@@ -30,4 +40,4 @@ private:
     Vector bias_;
     std::unique_ptr<ActivationFunction> function_;
 };
-}  // namespace project
+}  // namespace nn

@@ -1,16 +1,15 @@
 #include "LearningRate.h"
 
-namespace project {
-
+namespace nn {
 LearningRate::LearningRate() = default;
 
-LearningRate::LearningRate(NumT lambda, NumT s0, NumT power)
+LearningRate::LearningRate(Scalar lambda, Scalar s0, Scalar power)
     : lambda_(lambda), s0_(s0), power_(power) {
 }
 
-NumT LearningRate::operator()() {
+Scalar LearningRate::operator()() {
     ++iteration_;
     return lambda_ * std::pow(s0_ / (s0_ + iteration_), power_);
 }
 
-}  // namespace project
+}  // namespace nn

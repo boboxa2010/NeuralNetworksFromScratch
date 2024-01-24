@@ -2,34 +2,34 @@
 
 #include <cmath>
 
-namespace project {
+namespace nn {
 ActivationFunction::ActivationFunction(const FuncT &function, const FuncT &derivative)
     : function_(function), derivative_(derivative) {
 }
 
-NumT ActivationFunction::ApplyFunction(NumT x) const {
+Scalar ActivationFunction::ApplyFunction(Scalar x) const {
     return function_(x);
 }
 
-NumT ActivationFunction::ApplyDerivative(NumT x) const {
+Scalar ActivationFunction::ApplyDerivative(Scalar x) const {
     return derivative_(x);
 }
 
 Matrix ActivationFunction::GetDifferential(const Vector &v) const {
-    return v.unaryExpr(function_).asDiagonal();
+    return v.unaryExpr(derivative_).asDiagonal();
 }
 
 SigmoidFunction::SigmoidFunction()
-    : ActivationFunction([](NumT x) { return 1 / (1 + exp(-x)); },
-                         [](NumT x) { return exp(x) / ((1 + exp(x)) * (1 + exp(x))); }) {
+    : ActivationFunction([](Scalar x) { return 1 / (1 + exp(-x)); },
+                         [](Scalar x) { return exp(x) / ((1 + exp(x)) * (1 + exp(x))); }) {
 }
 
 ReLuFunction::ReLuFunction()
-    : ActivationFunction([](NumT x) { return x > 0 ? x : 0; },
-                         [](NumT x) { return x > 0 ? 1 : 0; }) {
+    : ActivationFunction([](Scalar x) { return std::max(x, 0.0); },
+                         [](Scalar x) { return x > 0 ? 1 : 0; }) {
 }
 
 LinearFunction::LinearFunction()
-    : ActivationFunction([](NumT x) { return x; }, [](NumT x) { return 1; }) {
+    : ActivationFunction([](Scalar x) { return x; }, [](Scalar x) { return 1; }) {
 }
-}  // namespace project
+}  // namespace nn

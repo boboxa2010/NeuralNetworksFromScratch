@@ -1,9 +1,19 @@
 #pragma once
 
+#include <filesystem>
+
 #include "declarations.h"
 
-namespace project {
+namespace nn {
 void AsciiRender(const Vector &image, const Vector &label);
-uint32_t ConvToLittleEndian(uint32_t n);
+
 Vector OneHotEncoding(uint8_t object, size_t number_of_categories);
-}  // namespace project
+
+Matrix GenerateRandNMatrix(size_t rows, size_t columns);
+
+Vector GenerateRandNVector(size_t size);
+
+std::vector<Vector> ReadImages(const std::filesystem::path &path);
+
+std::vector<Vector> ReadLabels(const std::filesystem::path &path);
+}  // namespace nn

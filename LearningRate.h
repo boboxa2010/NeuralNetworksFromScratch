@@ -2,23 +2,23 @@
 
 #include "declarations.h"
 
-namespace project {
+namespace nn {
 class LearningRate {
 public:
     LearningRate();
 
-    LearningRate(NumT lambda, NumT s0, NumT power);
+    LearningRate(Scalar lambda, Scalar s0, Scalar power);
 
-    NumT operator()();
+    Scalar operator()();
 
 private:
-    static constexpr NumT kDefaultLambda = 1e-3;
-    static constexpr NumT kDefaultS0 = 1;
-    static constexpr NumT kDefaultPower = 0.5;
+    static constexpr Scalar kDefaultLambda = 1e-3;
+    static constexpr Scalar kDefaultS0 = 1;
+    static constexpr Scalar kDefaultPower = 0.5;
 
-    NumT lambda_ = kDefaultLambda;
-    NumT s0_ = kDefaultS0;
-    NumT power_ = kDefaultPower;
+    Scalar lambda_ = kDefaultLambda;
+    Scalar s0_ = kDefaultS0;
+    Scalar power_ = kDefaultPower;
     size_t iteration_{0};
 };
-}  // namespace project
+}  // namespace nn
