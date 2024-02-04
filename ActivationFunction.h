@@ -10,6 +10,8 @@ class ActivationFunction {
     using FuncT = std::function<Scalar(Scalar)>;
 
 public:
+    ActivationFunction() = default;
+
     ActivationFunction(const FuncT &function, const FuncT &derivative);
 
     Scalar ApplyFunction(Scalar x) const;

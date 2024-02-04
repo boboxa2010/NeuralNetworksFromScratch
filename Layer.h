@@ -1,18 +1,16 @@
 #pragma once
 
-#include <memory>
-
 #include "ActivationFunction.h"
 #include "LearningRate.h"
 
 namespace nn {
 struct Input {
-    constexpr explicit Input(size_t size);
+    explicit Input(size_t size);
 
     size_t size;
 };
 struct Output {
-    constexpr explicit Output(size_t size);
+    explicit Output(size_t size);
 
     size_t size;
 };
@@ -20,7 +18,7 @@ class Layer {
 public:
     Layer();
 
-    Layer(Input input_size, Output output_size, std::unique_ptr<ActivationFunction> f);
+    Layer(Input input_size, Output output_size, const ActivationFunction &f);
 
     Vector Evaluate(const Vector &x) const noexcept;
 
@@ -38,6 +36,6 @@ public:
 private:
     Matrix weights_;
     Vector bias_;
-    std::unique_ptr<ActivationFunction> function_;
+    ActivationFunction function_;
 };
 }  // namespace nn

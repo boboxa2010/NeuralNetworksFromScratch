@@ -3,16 +3,16 @@
 #include "utils.h"
 
 namespace nn {
-constexpr Input::Input(size_t size) : size(size) {
+Input::Input(size_t size) : size(size) {
 }
 
-constexpr Output::Output(size_t size) : size(size) {
+Output::Output(size_t size) : size(size) {
 }
 
 Layer::Layer() = default;
 
-Layer::Layer(Input input, Output output, std::unique_ptr<ActivationFunction> f)
-    : function_(std::move(f)),
+Layer::Layer(Input input, Output output, const ActivationFunction &f)
+    : function_(f),
       weights_(GenerateRandNMatrix(output.size, input.size)),
       bias_(GenerateRandNVector(output.size)) {
 }
@@ -20,14 +20,14 @@ Layer::Layer(Input input, Output output, std::unique_ptr<ActivationFunction> f)
 Vector Layer::Evaluate(const Vector &x) const noexcept {
     assert(x.size() == weights_.cols());
     Vector result = weights_ * x + bias_;
-    function_->ApplyFunction(result.data(), result.data() + result.size());
+    function_.ApplyFunction(result.data(), result.data() + result.size());
     return result;
 }
 
 Vector Layer::EvaluateDerivative(const Vector &x) const noexcept {
     assert(x.size() == weights_.cols());
     Vector result = weights_ * x + bias_;
-    function_->ApplyDerivative(result.data(), result.data() + result.size());
+    function_.ApplyDerivative(result.data(), result.data() + result.size());
     return result;
 }
 
@@ -38,13 +38,13 @@ Matrix Layer::GetWeightsGradient(const Vector &x, const RowVector &u) const noex
 Vector Layer::GetBiasGradient(const Vector &x, const RowVector &u) const noexcept {
     assert(x.size() == weights_.cols());
     assert(u.size() == weights_.rows());
-    return function_->GetDifferential(weights_ * x + bias_) * u.transpose();
+    return function_.GetDifferential(weights_ * x + bias_) * u.transpose();
 }
 
 Vector Layer::GetNextGradient(const Vector &x, const RowVector &u) const noexcept {
     assert(x.size() == weights_.cols());
     assert(u.size() == weights_.rows());
-    return u * function_->GetDifferential(weights_ * x + bias_) * weights_;
+    return u * function_.GetDifferential(weights_ * x + bias_) * weights_;
 }
 
 void Layer::Update(const Matrix &weights_grad, const Vector &bias_grad,

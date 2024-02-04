@@ -75,7 +75,7 @@ Matrix GenerateRandNMatrix(size_t rows, size_t columns) {
 }
 
 Vector GenerateRandNVector(size_t size) {
-    return GenerateRandNMatrix(1, size);
+    return GenerateRandNMatrix(size, 1);
 }
 
 std::vector<Vector> ReadLabels(const std::filesystem::path &path) {
