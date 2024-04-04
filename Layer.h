@@ -16,8 +16,6 @@ struct Output {
 };
 class Layer {
 public:
-    Layer();
-
     Layer(Input input_size, Output output_size, const ActivationFunction &f);
 
     Vector Evaluate(const Vector &x) const noexcept;

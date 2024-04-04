@@ -9,8 +9,6 @@ Input::Input(size_t size) : size(size) {
 Output::Output(size_t size) : size(size) {
 }
 
-Layer::Layer() = default;
-
 Layer::Layer(Input input, Output output, const ActivationFunction &f)
     : function_(f),
       weights_(GenerateRandNMatrix(output.size, input.size)),
