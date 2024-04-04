@@ -31,8 +31,6 @@ using LossFunction = Any<details::ILossFunction, details::ImplLossFunction>;
 
 class MSE {
 public:
-    MSE() = default;
-
     Scalar operator()(const Vector &x, const Vector &y) const noexcept;
 
     RowVector GetGradient(const Vector &predicted, const Vector &target) const noexcept;
@@ -40,8 +38,6 @@ public:
 
 class CrossEntropy {
 public:
-    CrossEntropy() = default;
-
     Scalar operator()(const Vector &x, const Vector &y) const noexcept;
 
     RowVector GetGradient(const Vector &predicted, const Vector &target) const noexcept;

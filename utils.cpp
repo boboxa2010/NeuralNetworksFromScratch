@@ -70,7 +70,7 @@ Vector OneHotEncoding(uint8_t object, size_t number_of_categories) {
 
 Matrix GenerateRandNMatrix(size_t rows, size_t columns) {
     static Eigen::Rand::Vmt19937_64 urng{42};
-    static Eigen::Rand::NormalGen<float> norm_gen{0, 1};
+    static Eigen::Rand::NormalGen<Scalar> norm_gen{0, 1};
     return norm_gen.generate<Matrix>(rows, columns, urng);
 }
 
