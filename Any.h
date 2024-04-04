@@ -6,7 +6,6 @@
 template <template <typename> typename IAny, template <typename> typename Impl>
 class Any {
     class Concept;
-
 public:
     constexpr Any() noexcept = default;
 
@@ -22,21 +21,15 @@ public:
 
     Any &operator=(Any &&rhs) noexcept = default;
 
-    template <typename T,
-              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> &&
-                                          std::is_copy_constructible_v<std::decay_t<T>>>>
-    Any(T &&value)
-        : model_(std::make_unique<Impl<Keeper<std::decay_t<T>>>>(std::forward<T>(value))) {
+    template <typename T>
+    Any(T &&value) : model_(std::make_unique<Impl<Keeper<T>>>(std::forward<T>(value))) {
     }
 
-    template <class T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> &&
-                                                   std::is_copy_constructible_v<std::decay_t<T>>>>
+    template <class T>
     Any &operator=(T &&value) noexcept {
-        Any(std::forward<std::decay_t<T>>(std::forward<T>(value))).Swap(*this);
+        Any(std::forward<T>(value)).Swap(*this);
         return *this;
     }
-
-    ~Any() = default;
 
     bool HasValue() const {
         return model_ != nullptr;
@@ -58,13 +51,6 @@ public:
         return model_.get();
     }
 
-    const std::type_info &Type() const noexcept {
-        if (!model_) {
-            return typeid(void);
-        }
-        return model_->TypeInfo();
-    }
-
 private:
     class IEmpty {
     protected:
@@ -72,10 +58,6 @@ private:
     };
 
     class Concept : public IAny<IEmpty> {
-    public:
-        virtual const std::type_info &TypeInfo() = 0;
-
-    private:
         virtual std::unique_ptr<Concept> MakeCopy() const = 0;
         friend class Any;
     };
@@ -96,10 +78,6 @@ private:
 
         const T &Get() const {
             return data_;
-        }
-
-        const std::type_info &TypeInfo() override {
-            return typeid(T);
         }
 
     private:
