@@ -19,16 +19,12 @@ Layer::Layer(Input input, Output output, const ActivationFunction &f)
 
 Vector Layer::Evaluate(const Vector &x) const noexcept {
     assert(x.size() == weights_.cols());
-    Vector result = weights_ * x + bias_;
-    function_.ApplyFunction(result.data(), result.data() + result.size());
-    return result;
+    return function_->ApplyFunction(weights_ * x + bias_);
 }
 
 Vector Layer::EvaluateDerivative(const Vector &x) const noexcept {
     assert(x.size() == weights_.cols());
-    Vector result = weights_ * x + bias_;
-    function_.ApplyDerivative(result.data(), result.data() + result.size());
-    return result;
+    return function_->ApplyDerivative(weights_ * x + bias_);
 }
 
 Matrix Layer::GetWeightsGradient(const Vector &x, const RowVector &u) const noexcept {
@@ -38,20 +34,21 @@ Matrix Layer::GetWeightsGradient(const Vector &x, const RowVector &u) const noex
 Vector Layer::GetBiasGradient(const Vector &x, const RowVector &u) const noexcept {
     assert(x.size() == weights_.cols());
     assert(u.size() == weights_.rows());
-    return function_.GetDifferential(weights_ * x + bias_) * u.transpose();
+    return function_->GetDifferential(weights_ * x + bias_) * u.transpose();
 }
 
 Vector Layer::GetNextGradient(const Vector &x, const RowVector &u) const noexcept {
     assert(x.size() == weights_.cols());
     assert(u.size() == weights_.rows());
-    return u * function_.GetDifferential(weights_ * x + bias_) * weights_;
+    return u * function_->GetDifferential(weights_ * x + bias_) * weights_;
 }
 
 void Layer::Update(const Matrix &weights_grad, const Vector &bias_grad,
                    LearningRate &learning_rate) noexcept {
     assert(weights_grad.rows() == weights_.rows() && weights_grad.cols() == weights_.cols());
     assert(bias_grad.size() == bias_.size());
-    weights_ -= learning_rate() * weights_grad;
-    bias_ -= learning_rate() * bias_grad;
+    Scalar lr = learning_rate();
+    weights_ -= lr * weights_grad;
+    bias_ -= lr * bias_grad;
 }
 }  // namespace nn

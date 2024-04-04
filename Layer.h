@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ActivationFunction.h"
+#include "ActivationFunctions.h"
 #include "LearningRate.h"
 
 namespace nn {
