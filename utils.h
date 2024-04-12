@@ -13,7 +13,7 @@ Matrix GenerateRandNMatrix(size_t rows, size_t columns);
 
 Vector GenerateRandNVector(size_t size);
 
-std::vector<Vector> ReadImages(const std::filesystem::path &path);
-
 std::vector<Vector> ReadLabels(const std::filesystem::path &path);
+
+std::vector<Vector> ReadImages(const std::filesystem::path &path);
 }  // namespace nn

@@ -5,17 +5,23 @@
 
 namespace nn {
 struct Input {
-    explicit Input(size_t size);
+    explicit Input(size_t size) : size(size) {
+    }
 
     size_t size;
 };
+
 struct Output {
-    explicit Output(size_t size);
+    explicit Output(size_t size) : size(size) {
+    }
 
     size_t size;
 };
+
 class Layer {
 public:
+    Layer(Input input_size, Output output_size, ActivationFunction f);
+
     Layer(Input input_size, Output output_size, const ActivationFunction &f);
 
     Vector Evaluate(const Vector &x) const noexcept;

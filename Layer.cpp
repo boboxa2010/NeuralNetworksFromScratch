@@ -3,10 +3,10 @@
 #include "utils.h"
 
 namespace nn {
-Input::Input(size_t size) : size(size) {
-}
-
-Output::Output(size_t size) : size(size) {
+Layer::Layer(Input input, Output output, ActivationFunction f)
+    : function_(std::move(f)),
+      weights_(GenerateRandNMatrix(output.size, input.size)),
+      bias_(GenerateRandNVector(output.size)) {
 }
 
 Layer::Layer(Input input, Output output, const ActivationFunction &f)
