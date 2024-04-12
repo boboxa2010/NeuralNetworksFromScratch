@@ -91,4 +91,15 @@ class LinearFunction : public CoordinateFunction {
 public:
     LinearFunction();
 };
+
+class SoftMax {
+public:
+    SoftMax() = default;
+
+    Vector ApplyFunction(const Vector &v) const;
+
+    Vector ApplyDerivative(const Vector &v) const;
+
+    Matrix GetDifferential(const Vector &v) const;
+};
 }  // namespace nn
