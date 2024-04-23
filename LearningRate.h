@@ -5,7 +5,7 @@
 namespace nn {
 class LearningRate {
 public:
-    LearningRate();
+    LearningRate() = default;
 
     LearningRate(Scalar lambda, Scalar s0, Scalar power);
 

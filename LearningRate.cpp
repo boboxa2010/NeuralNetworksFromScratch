@@ -1,8 +1,6 @@
 #include "LearningRate.h"
 
 namespace nn {
-LearningRate::LearningRate() = default;
-
 LearningRate::LearningRate(Scalar lambda, Scalar s0, Scalar power)
     : lambda_(lambda), s0_(s0), power_(power) {
 }

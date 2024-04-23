@@ -6,6 +6,7 @@
 template <template <typename> typename IAny, template <typename> typename Impl>
 class Any {
     class Concept;
+
 public:
     constexpr Any() noexcept = default;
 
