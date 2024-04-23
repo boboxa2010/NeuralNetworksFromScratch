@@ -1,19 +1,18 @@
 #pragma once
 
-#include <filesystem>
-
 #include "declarations.h"
 
 namespace nn {
-void AsciiRender(const Vector &image, const Vector &label);
+Vector OneHotEncoding(uint8_t object, Index number_of_categories);
 
-Vector OneHotEncoding(uint8_t object, size_t number_of_categories);
+Matrix GenerateRandNMatrix(Index rows, Index columns);
 
-Matrix GenerateRandNMatrix(size_t rows, size_t columns);
+Vector GenerateRandNVector(Index size);
 
-Vector GenerateRandNVector(size_t size);
+uint32_t ConvToLittleEndian(uint32_t n);
 
-std::vector<Vector> ReadLabels(const std::filesystem::path &path);
+inline Index ArgMax(const Vector& v) {
+    return std::distance(v.begin(), std::max_element(v.begin(), v.end()));
+}
 
-std::vector<Vector> ReadImages(const std::filesystem::path &path);
 }  // namespace nn
