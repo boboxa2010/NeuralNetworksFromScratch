@@ -11,9 +11,7 @@ namespace activation_function {
 template <typename Base>
 class Interface : public Base {
 public:
-    virtual Vector ApplyFunction(const Vector &v) const = 0;
-
-    virtual Vector ApplyDerivative(const Vector &v) const = 0;
+    virtual Vector Evaluate(const Vector &v) const = 0;
 
     virtual Matrix GetDifferential(const Vector &v) const = 0;
 };
@@ -23,12 +21,8 @@ class Impl : public Base {
 public:
     using Base::Base;
 
-    Vector ApplyFunction(const Vector &v) const {
-        return Base::Get().ApplyFunction(v);
-    }
-
-    Vector ApplyDerivative(const Vector &v) const {
-        return Base::Get().ApplyDerivative(v);
+    Vector Evaluate(const Vector &v) const {
+        return Base::Get().Evaluate(v);
     }
 
     Matrix GetDifferential(const Vector &v) const {
@@ -39,34 +33,29 @@ public:
 
 using ActivationFunction = Any<activation_function::Interface, activation_function::Impl>;
 
-class CoordinateFunction {
+class ElemWiseFunction {
     using FuncT = std::function<Scalar(Scalar)>;
-
 public:
-    CoordinateFunction() = default;
-
     template <class F1, class F2>
-    CoordinateFunction(F1 &&function, F2 &&derivative)
+    ElemWiseFunction(F1 &&function, F2 &&derivative)
         : function_(std::forward<F1>(function)), derivative_(std::forward<F2>(derivative)) {
     }
 
-    Scalar ApplyFunction(Scalar x) const;
+    Scalar Evaluate(Scalar x) const;
 
-    Scalar ApplyDerivative(Scalar x) const;
+    Scalar EvaluateDerivative(Scalar x) const;
 
     template <typename IterType>
-    void ApplyFunction(IterType first, IterType last) const {
-        std::for_each(first, last, [this](Scalar &x) { x = ApplyFunction(x); });
+    void Evaluate(IterType first, IterType last) const {
+        std::for_each(first, last, [this](Scalar &x) { x = Evaluate(x); });
     }
 
     template <typename IterType>
-    void ApplyDerivative(IterType first, IterType last) const {
-        std::for_each(first, last, [this](Scalar &x) { x = ApplyDerivative(x); });
+    void EvaluateDerivative(IterType first, IterType last) const {
+        std::for_each(first, last, [this](Scalar &x) { x = EvaluateDerivative(x); });
     }
 
-    Vector ApplyFunction(const Vector &v) const;
-
-    Vector ApplyDerivative(const Vector &v) const;
+    Vector Evaluate(const Vector &v) const;
 
     Matrix GetDifferential(const Vector &v) const;
 
@@ -77,28 +66,26 @@ private:
     FuncT derivative_;
 };
 
-class SigmoidFunction : public CoordinateFunction {
+class Sigmoid : public ElemWiseFunction {
 public:
-    SigmoidFunction();
+    Sigmoid();
 };
 
-class ReLuFunction : public CoordinateFunction {
+class ReLu : public ElemWiseFunction {
 public:
-    ReLuFunction();
+    ReLu();
 };
 
-class LinearFunction : public CoordinateFunction {
+class Linear : public ElemWiseFunction {
 public:
-    LinearFunction();
+    Linear();
 };
 
 class SoftMax {
 public:
     SoftMax() = default;
 
-    Vector ApplyFunction(const Vector &v) const;
-
-    Vector ApplyDerivative(const Vector &v) const;
+    Vector Evaluate(const Vector &v) const;
 
     Matrix GetDifferential(const Vector &v) const;
 };
