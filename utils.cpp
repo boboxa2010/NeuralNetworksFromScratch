@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "EigenRand/EigenRand"
+#include "EigenRand/EigenRand/EigenRand"
 
 namespace {
 constexpr uint8_t kSeed = 42;
@@ -40,6 +40,6 @@ Data ShuffleData(const Data &data) {
 }
 
 Index ArgMax(const Vector &v) {
-    return std::distance(v.begin(), std::max_element(v.begin(), v.end()));
+    return std::distance(v.data(), std::max_element(v.data(), v.data() + v.size()));
 }
 }  // namespace nn
