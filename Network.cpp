@@ -38,9 +38,9 @@ void Network::TrainEpoch(const Data &train, Index batch_size, const LossFunction
                          LearningRate &lr, const Data &test) {
     Data shuffle_data = ShuffleData(train);
     for (Index i = 0; i < shuffle_data.X.cols(); i += batch_size) {
-        Matrix x_batch =
+        const Matrix &x_batch =
             shuffle_data.X.middleCols(i, std::min(batch_size, shuffle_data.X.cols() - i));
-        Matrix y_batch =
+        const Matrix &y_batch =
             shuffle_data.y.middleCols(i, std::min(batch_size, shuffle_data.X.cols() - i));
         TrainBatch(x_batch, y_batch, batch_size, loss, lr);
     }
