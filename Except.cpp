@@ -1,5 +1,6 @@
 #include "Except.h"
 
+#include <iostream>
 #include <stdexcept>
 
 namespace except {
@@ -7,9 +8,9 @@ void React() {
     try {
         throw;
     } catch(const std::invalid_argument& e) {
-        // обрабатываешь известные исключения
+        std::cout << e.what() << '\n';
     } catch(...) {
-        // обрабатываешь незивестные исключения
+        std::cout << "Unknown error" << '\n';
     }
 }
 }
