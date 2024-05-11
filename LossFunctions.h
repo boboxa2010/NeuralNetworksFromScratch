@@ -8,9 +8,9 @@ namespace details {
 template <typename Base>
 class ILossFunction : public Base {
 public:
-    virtual Scalar operator()(const Matrix &x, const Matrix &y) const = 0;
+    virtual Vector Evaluate(const Matrix& x, const Matrix &y) const = 0;
 
-    virtual RowVector GetGradient(const Matrix &predicted, const Matrix &target) const = 0;
+    virtual Matrix GetGradient(const Matrix &predicted, const Matrix &target) const = 0;
 };
 
 template <typename Base>
@@ -18,11 +18,11 @@ class ImplLossFunction : public Base {
 public:
     using Base::Base;
 
-    Scalar operator()(const Matrix &x, const Matrix &y) const {
-        return Base::Get().operator()(x, y);
+    Vector Evaluate(const Matrix& x, const Matrix &y) const {
+        return Base::Get().Evaluate(x, y);
     }
 
-    RowVector GetGradient(const Matrix &predicted, const Matrix &target) const {
+    Matrix GetGradient(const Matrix &predicted, const Matrix &target) const {
         return Base::Get().GetGradient(predicted, target);
     }
 };
@@ -31,15 +31,15 @@ using LossFunction = Any<details::ILossFunction, details::ImplLossFunction>;
 
 class MSE {
 public:
-    Scalar operator()(const Matrix &x, const Matrix &y) const;
+    Vector Evaluate(const Matrix& x, const Matrix &y) const;
 
-    RowVector GetGradient(const Matrix &predicted, const Matrix &target) const;
+    Matrix GetGradient(const Matrix &predicted, const Matrix &target) const;
 };
 
 class CrossEntropy {
 public:
-    Scalar operator()(const Matrix &x, const Matrix &y) const;
+    Vector Evaluate(const Matrix& x, const Matrix &y) const;
 
-    RowVector GetGradient(const Matrix &predicted, const Matrix &target) const;
+    Matrix GetGradient(const Matrix &predicted, const Matrix &target) const;
 };
 }  // namespace nn

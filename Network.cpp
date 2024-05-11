@@ -4,14 +4,22 @@
 
 namespace nn {
 Network::Network(std::initializer_list<Layer> layers) {
-    //TODO ASSERT FOR DIM
-    layers_.reserve(layers.size());
     for (auto it = layers.begin(); it != layers.end(); ++it) {
         layers_.emplace_back(*it);
     }
 }
 
-Matrix Network::operator()(const Matrix &input) const {
+Network::Network(std::initializer_list<Index> dimensions,
+                 std::initializer_list<ActivationFunction> functions) {
+    layers_.reserve(functions.size());
+    auto dim = dimensions.begin();
+    for (auto it = functions.begin(); it != functions.end(); ++it, ++dim) {
+        layers_.emplace_back(Input(*dim), Output(*std::next(dim)),
+                             std::move(ActivationFunction(*it)));
+    }
+}
+
+Matrix Network::Predict(const Matrix &input) const {
     Matrix output = input;
     for (const auto &layer : layers_) {
         output = layer.Evaluate(output);
@@ -19,22 +27,32 @@ Matrix Network::operator()(const Matrix &input) const {
     return output;
 }
 
-void Network::Train(const Data &data, Index n_epochs, Index batch_size, const LossFunction &loss,
-                    LearningRate &lr) {
+void Network::Train(const Data &train, Index n_epochs, Index batch_size, const LossFunction &loss,
+                    LearningRate &lr, const Data &test) {
     for (Index epoch = 1; epoch <= n_epochs; ++epoch) {
-        for (Index i = 0; i < data.X.cols(); ++i) {
-            ZeroGrad();
-            auto x_batch = data.X.col(i);
-            auto y_batch = data.y.col(i);
-            auto predicted = ForwardPass(x_batch);
-
-            auto grad = loss->GetGradient(predicted.back(), y_batch);
-
-            BackwardPass(predicted, grad);
-
-            Step(lr);
-        }
+        TrainEpoch(train, batch_size, loss, lr, test);
     }
+}
+
+void Network::TrainEpoch(const Data &train, Index batch_size, const LossFunction &loss,
+                         LearningRate &lr, const Data &test) {
+    Data shuffle_data = ShuffleData(train);
+    for (Index i = 0; i < shuffle_data.X.cols(); i += batch_size) {
+        Matrix x_batch =
+            shuffle_data.X.middleCols(i, std::min(batch_size, shuffle_data.X.cols() - i));
+        Matrix y_batch =
+            shuffle_data.y.middleCols(i, std::min(batch_size, shuffle_data.X.cols() - i));
+        TrainBatch(x_batch, y_batch, batch_size, loss, lr);
+    }
+}
+
+void Network::TrainBatch(const Matrix &x, const Matrix &y, Index batch_size,
+                         const LossFunction &loss, LearningRate &lr) {
+    ZeroGrad();
+    auto predicted = ForwardPass(x);
+    auto grad = loss->GetGradient(predicted.back(), y);
+    BackwardPass(predicted, grad);
+    Step(lr, batch_size);
 }
 
 std::vector<Matrix> Network::ForwardPass(const Matrix &x) const {
@@ -49,18 +67,20 @@ std::vector<Matrix> Network::ForwardPass(const Matrix &x) const {
     return res;
 }
 
-void Network::ZeroGrad()  {
-    std::for_each(layers_.begin(), layers_.end(), [](Layer& layer) { layer.ZeroGrad(); });
-}
-
-void Network::BackwardPass(const std::vector<Matrix>& predicted, const RowVector &u){
-    auto current_grad = u;
+void Network::BackwardPass(const TenZor &predicted, const Matrix &loss_grad) {
+    auto current_grad = loss_grad;
     for (Index i = layers_.size() - 1; i >= 0; --i) {
         current_grad = layers_[i].BackPropagation(predicted[i], current_grad);
     }
 }
 
-void Network::Step(LearningRate& lr) {
-    std::for_each(layers_.begin(), layers_.end(), [&lr](Layer& layer) { layer.Update(lr); });
+void Network::ZeroGrad() {
+    std::for_each(layers_.begin(), layers_.end(), [](Layer &layer) { layer.ZeroGrad(); });
+}
+
+void Network::Step(LearningRate &learning_rate, Index batch_size) {
+    Scalar lr = learning_rate->GetValue();
+    std::for_each(layers_.begin(), layers_.end(),
+                  [lr, batch_size](Layer &layer) { layer.Update(lr, batch_size); });
 }
 }  // namespace nn

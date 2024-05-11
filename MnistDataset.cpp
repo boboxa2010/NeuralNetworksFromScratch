@@ -15,7 +15,7 @@ constexpr nn::Scalar kNormalizeCoefficient = 1.0 / 255.0;
 
 nn::Vector GetNormalizedImage(const std::array<uint8_t, kMnistNumberOfPixels> &image) {
     nn::Vector normalized_image{kMnistNumberOfPixels};
-    for (size_t i = 0; i < kMnistNumberOfPixels; ++i) {
+    for (nn::Index i = 0; i < kMnistNumberOfPixels; ++i) {
         normalized_image(i) = kNormalizeCoefficient * image[i];
     }
     return normalized_image;
@@ -49,7 +49,7 @@ Labels::Data Labels::ReadLabels(std::ifstream *file) {
     Data labels(kMnistNumberOfDigits, number_of_labels);
 
     uint8_t label = 0;
-    for (size_t i = 0; i < number_of_labels; ++i) {
+    for (Index i = 0; i < number_of_labels; ++i) {
         file->read(reinterpret_cast<char *>(&label), sizeof(label));
         labels.col(i) = OneHotEncoding(label, kMnistNumberOfDigits);
     }
@@ -96,7 +96,7 @@ Images::Data Images::ReadImages(std::ifstream *file) {
     Data images(info.number_of_columns * info.number_of_rows, info.number_of_images);
 
     std::array<uint8_t, kMnistImageNumberColumn * kMnistImageNumberRows> image{};
-    for (size_t i = 0; i < info.number_of_images; ++i) {
+    for (Index i = 0; i < info.number_of_images; ++i) {
         file->read(reinterpret_cast<char *>(&image), image.size());
         images.col(i) = std::move(GetNormalizedImage(image));
     }

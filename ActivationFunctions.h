@@ -11,7 +11,7 @@ namespace activation_function {
 template <typename Base>
 class Interface : public Base {
 public:
-    virtual Vector Evaluate(const Vector &v) const = 0;
+    virtual Matrix Evaluate(const Matrix &x) const = 0;
 
     virtual Matrix GetDifferential(const Vector &v) const = 0;
 };
@@ -21,8 +21,8 @@ class Impl : public Base {
 public:
     using Base::Base;
 
-    Vector Evaluate(const Vector &v) const {
-        return Base::Get().Evaluate(v);
+    Matrix Evaluate(const Matrix &x) const {
+        return Base::Get().Evaluate(x);
     }
 
     Matrix GetDifferential(const Vector &v) const {
@@ -35,6 +35,7 @@ using ActivationFunction = Any<activation_function::Interface, activation_functi
 
 class ElemWiseFunction {
     using FuncT = std::function<Scalar(Scalar)>;
+
 public:
     template <class F1, class F2>
     ElemWiseFunction(F1 &&function, F2 &&derivative)
@@ -55,7 +56,9 @@ public:
         std::for_each(first, last, [this](Scalar &x) { x = EvaluateDerivative(x); });
     }
 
-    Vector Evaluate(const Vector &v) const;
+    Matrix Evaluate(const Matrix &v) const;
+
+    Matrix EvaluateDerivative(const Matrix &v) const;
 
     Matrix GetDifferential(const Vector &v) const;
 
@@ -76,6 +79,11 @@ public:
     ReLu();
 };
 
+class LeakyReLu : public ElemWiseFunction {
+public:
+    LeakyReLu(Scalar slope);
+};
+
 class Linear : public ElemWiseFunction {
 public:
     Linear();
@@ -83,9 +91,9 @@ public:
 
 class SoftMax {
 public:
-    SoftMax() = default;
+    Vector operator()(const Vector &v) const;
 
-    Vector Evaluate(const Vector &v) const;
+    Matrix Evaluate(const Matrix &v) const;
 
     Matrix GetDifferential(const Vector &v) const;
 };

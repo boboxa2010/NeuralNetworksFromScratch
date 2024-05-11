@@ -1,25 +1,32 @@
 #include "LossFunctions.h"
-#include "ActivationFunctions.h"
-#include <iostream>
+
+namespace {
+constexpr double kEsp = 1e-5;
+}
 
 namespace nn {
-Scalar MSE::operator()(const Matrix &x, const Matrix &y) const {
+Vector MSE::Evaluate(const Matrix &x, const Matrix &y) const {
     assert(x.cols() == y.cols() && x.rows() == y.rows());
-    return (x - y).cwiseProduct(x - y).colwise().sum().mean();
+    return (x - y).cwiseProduct(x - y).colwise().sum();
 }
 
-RowVector MSE::GetGradient(const Matrix &predicted, const Matrix &target) const {
+Matrix MSE::GetGradient(const Matrix &predicted, const Matrix &target) const {
     assert(predicted.cols() == target.cols() && predicted.rows() == target.rows());
-    return 2 * (predicted - target).colwise().mean();
+    return 2 * (predicted - target).transpose();
 }
 
-Scalar CrossEntropy::operator()(const Matrix &x, const Matrix &y) const {
+Vector CrossEntropy::Evaluate(const Matrix &x, const Matrix &y) const {
     assert(x.cols() == y.cols() && x.rows() == y.rows());
-    return (-y).cwiseProduct(x.unaryExpr([](Scalar x) { return log2(x); })).colwise().sum().mean();
+    return (-y).cwiseProduct(x.unaryExpr([](Scalar x) { return log2(x + kEsp); })).colwise().sum();
 }
 
-RowVector CrossEntropy::GetGradient(const Matrix &predicted, const Matrix &target) const {
+Matrix CrossEntropy::GetGradient(const Matrix &predicted, const Matrix &target) const {
     assert(predicted.cols() == target.cols() && predicted.rows() == target.rows());
-    return (-target).cwiseProduct(predicted.cwiseInverse()).colwise().mean();
+    /*
+    SoftMax s;
+    return (s.Evaluate(predicted) - target).transpose();
+     думаю надо не разделять SoftMax и CrossEntropy, но раюотает.
+     */
+    return (-target).cwiseProduct((predicted.array() + kEsp).matrix().cwiseInverse()).transpose();
 }
 }  // namespace nn

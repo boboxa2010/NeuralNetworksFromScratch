@@ -6,13 +6,13 @@
 
 namespace nn {
 struct Input {
-    explicit Input(size_t size) : size(size) {
+    explicit Input(Index size) : size(size) {
     }
     Index size;
 };
 
 struct Output {
-    explicit Output(size_t size) : size(size) {
+    explicit Output(Index size) : size(size) {
     }
     Index size;
 };
@@ -28,25 +28,27 @@ public:
           grad_bias_(Matrix::Zero(output.size, 1)) {
     }
 
-    Vector Evaluate(const Vector &x) const;
+    Matrix Evaluate(const Matrix &x) const;
 
-    RowVector GetNextGradient(const Vector &x, const RowVector &u) const;
+    Matrix BackPropagation(const Matrix &x, const Matrix &u);
 
-    void Update(LearningRate &learning_rate);
-
-    RowVector BackPropagation(const Vector &x, const RowVector &u);
+    void Update(Scalar lr, Index batch_size);
 
     void ZeroGrad();
 
 private:
-    Matrix GetWeightsGradient(const Vector &x, const RowVector &u) const;
+    Matrix GetNextGradient(const Matrix &delta) const;
 
-    Vector GetBiasGradient(const Vector &x, const RowVector &u) const;
+    Matrix GetWeightsGradientBatch(const Matrix &x, const Matrix &delta) const;
 
+    Vector GetBiasGradientBatch(const Matrix &delta) const;
+
+    Matrix GetDelta(const Matrix &x, const Matrix &u) const;
+
+    ActivationFunction function_;
     Matrix weights_;
     Vector bias_;
     Matrix grad_weights_;
     Vector grad_bias_;
-    ActivationFunction function_;
 };
 }  // namespace nn

@@ -1,13 +1,11 @@
 #include "utils.h"
 
-#include <iostream>
+#include <random>
 
 #include "EigenRand/EigenRand"
-#include "declarations.h"
 
 namespace {
-constexpr uint32_t kImageSize = 784;
-constexpr uint32_t kLabelSize = 10;
+constexpr uint8_t kSeed = 42;
 }  // namespace
 
 namespace nn {
@@ -18,7 +16,7 @@ Vector OneHotEncoding(uint8_t object, Index number_of_categories) {
 }
 
 Matrix GenerateRandNMatrix(Index rows, Index columns) {
-    static Eigen::Rand::Vmt19937_64 urng{42};
+    static Eigen::Rand::Vmt19937_64 urng{kSeed};
     static Eigen::Rand::NormalGen<Scalar> norm_gen{0, 1};
     return norm_gen.generate<Matrix>(rows, columns, urng);
 }
@@ -31,5 +29,17 @@ uint32_t ConvToLittleEndian(uint32_t n) {
     char *bytes = reinterpret_cast<char *>(&n);
     return (static_cast<uint8_t>(bytes[3]) | (static_cast<uint8_t>(bytes[2]) << 8) |
             (static_cast<uint8_t>(bytes[1]) << 16) | (static_cast<uint8_t>(bytes[0]) << 24));
+}
+
+Data ShuffleData(const Data &data) {
+    Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(data.X.cols());
+    perm.setIdentity();
+    std::shuffle(perm.indices().data(), perm.indices().data() + perm.indices().size(),
+                 std::mt19937(std::random_device()()));
+    return Data{data.X * perm, data.y * perm};
+}
+
+Index ArgMax(const Vector &v) {
+    return std::distance(v.begin(), std::max_element(v.begin(), v.end()));
 }
 }  // namespace nn
