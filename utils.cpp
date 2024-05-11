@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "EigenRand/EigenRand/EigenRand"
+#include "EigenRand/EigenRand"
 
 namespace {
 constexpr uint8_t kSeed = 42;
