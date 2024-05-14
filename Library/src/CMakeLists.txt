@@ -1,0 +1,2 @@
+include_directories(${NeuralNetworksFromScratch_SOURCE_DIR}/Library/inc)
+add_library(Library ActivationFunctions.cpp Layer.cpp LearningRate.cpp LossFunctions.cpp MnistDataset.cpp Network.cpp utils.cpp)
