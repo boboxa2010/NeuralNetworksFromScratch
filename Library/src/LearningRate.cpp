@@ -1,4 +1,4 @@
-#include "LearningRate.h"
+#include "../inc/LearningRate.h"
 
 namespace nn {
 VowpalWabbit::VowpalWabbit(Scalar lambda, Scalar s0, Scalar power)

@@ -1,4 +1,4 @@
-#include "Layer.h"
+#include "../inc/Layer.h"
 
 namespace nn {
 Matrix Layer::Evaluate(const Matrix &x) const {
@@ -22,6 +22,14 @@ void Layer::Update(Scalar lr, Index batch_size) {
 void Layer::ZeroGrad() {
     grad_weights_.setZero();
     grad_bias_.setZero();
+}
+
+Matrix Layer::GetWeights() const {
+    return weights_;
+}
+
+Vector Layer::GetBias() const {
+    return bias_;
 }
 
 Matrix Layer::GetNextGradient(const Matrix &delta) const {

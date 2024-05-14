@@ -1,8 +1,8 @@
-#include "TestActivationFunction.h"
+#include "../inc/TestActivationFunction.h"
 
 #include <deque>
 
-#include "../ActivationFunctions.h"
+#include "../../Library/inc/ActivationFunctions.h"
 
 namespace {
 const double kEps = 1e-5;

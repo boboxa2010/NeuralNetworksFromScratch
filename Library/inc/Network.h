@@ -2,7 +2,6 @@
 
 #include "Layer.h"
 #include "LossFunctions.h"
-#include "MnistDataset.h"
 #include "initializer_list"
 
 namespace nn {

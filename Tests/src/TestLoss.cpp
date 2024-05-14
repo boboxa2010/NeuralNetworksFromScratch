@@ -1,6 +1,6 @@
-#include "TestLoss.h"
+#include "../inc/TestLoss.h"
 
-#include "../LossFunctions.h"
+#include "../inc/LossFunctions.h"
 
 namespace {
 class ExampleLoss {

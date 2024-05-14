@@ -1,26 +1,15 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22.1)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS Off)
 
 project(NeuralNetworksFromScratch)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED On)
-set(CMAKE_CXX_EXTENSIONS Off)
-
-include_directories(eigen)
+set(EIGEN_DIR "/home/ivan/Desktop/eigen-3.4.0")
+include_directories(${EIGEN_DIR})
 include_directories(EigenRand)
 
-add_executable(NeuralNetworksFromScratch main.cpp
-        ActivationFunctions.cpp
-        Layer.cpp
-        LossFunctions.cpp
-        LearningRate.cpp
-        MnistDataset.cpp
-        utils.cpp
-        Timer.cpp
-        Network.cpp
-        Except.cpp
-        tests/Tests.cpp
-        tests/TestActivationFunction.cpp
-        tests/TestLoss.cpp
-        tests/TestMnist.cpp
-)
+add_subdirectory(Library)
+add_subdirectory(Tests)
+

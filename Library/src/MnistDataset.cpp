@@ -1,7 +1,7 @@
-#include "MnistDataset.h"
+#include "../inc/MnistDataset.h"
 
-#include "BFile.h"
-#include "utils.h"
+#include "../inc/BFile.h"
+#include "../inc/utils.h"
 
 namespace {
 constexpr uint32_t kMnistImageMagicNumber = 2051;

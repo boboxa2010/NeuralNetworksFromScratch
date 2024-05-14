@@ -36,6 +36,10 @@ public:
 
     void ZeroGrad();
 
+    Matrix GetWeights() const;
+
+    Vector GetBias() const;
+
 private:
     Matrix GetNextGradient(const Matrix &delta) const;
 

@@ -1,4 +1,4 @@
-#include "LossFunctions.h"
+#include "../inc/LossFunctions.h"
 
 namespace {
 constexpr double kEsp = 1e-5;
@@ -22,11 +22,6 @@ Vector CrossEntropy::Evaluate(const Matrix &x, const Matrix &y) const {
 
 Matrix CrossEntropy::GetGradient(const Matrix &predicted, const Matrix &target) const {
     assert(predicted.cols() == target.cols() && predicted.rows() == target.rows());
-    /*
-    SoftMax s;
-    return (s.Evaluate(predicted) - target).transpose();
-     думаю надо не разделять SoftMax и CrossEntropy, но раюотает.
-     */
     return (-target).cwiseProduct((predicted.array() + kEsp).matrix().cwiseInverse()).transpose();
 }
 }  // namespace nn

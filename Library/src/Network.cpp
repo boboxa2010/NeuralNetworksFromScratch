@@ -1,6 +1,4 @@
-#include "Network.h"
-
-#include <iostream>
+#include "../inc/Network.h"
 
 namespace nn {
 Network::Network(std::initializer_list<Layer> layers) {

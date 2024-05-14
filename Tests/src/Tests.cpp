@@ -1,10 +1,11 @@
-#include "Tests.h"
+#include "../inc/Tests.h"
 
 #include <iostream>
 
-#include "TestActivationFunction.h"
-#include "TestLoss.h"
-#include "TestMnist.h"
+#include "../inc/TestActivationFunction.h"
+#include "../inc/TestLoss.h"
+#include "../inc/TestMnist.h"
+#include "../inc/TestLayer.h"
 
 namespace test {
 void RunAllTests() {
@@ -29,6 +30,8 @@ void RunAllTests() {
     TestCrossEntropy();
     TestLossCorrectness();
 
+    // Layer
+    TestCreateLayer();
     //MNIST
     TestMnist();
 

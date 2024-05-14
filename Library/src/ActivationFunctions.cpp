@@ -1,4 +1,4 @@
-#include "ActivationFunctions.h"
+#include "../inc/ActivationFunctions.h"
 
 #include <cmath>
 
@@ -38,7 +38,7 @@ Sigmoid::Sigmoid()
 }
 
 ReLu::ReLu()
-    : ElemWiseFunction([](Scalar x) { return x * (x > 0); }, [](Scalar x) { return x > 0; }) {
+    : ElemWiseFunction([](Scalar x) { return x > 0 ? x : 0.0; }, [](Scalar x) { return x > 0 ? 1.0 : 0.0; }) {
 }
 
 LeakyReLu::LeakyReLu(Scalar slope)
@@ -58,14 +58,6 @@ Matrix SoftMax::Evaluate(const Matrix &v) const {
     Matrix shifted = (v.rowwise() - v.colwise().maxCoeff()).array().exp().matrix();
     return ((shifted.array() / ((Vector::Ones(v.rows()) * shifted.colwise().sum()).array())))
         .matrix();
-    /*
-    return (((v.rowwise() - v.colwise().maxCoeff()).array().exp() /
-             ((Vector::Ones(v.rows()) *
-               (v.rowwise() - v.colwise().maxCoeff()).array().exp().matrix().colwise().sum())
-                  .array())))
-        .matrix();
-    */
-    // Как лучше ? Работают оба правильно вроде
 }
 
 Matrix SoftMax::GetDifferential(const Vector &v) const {

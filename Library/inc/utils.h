@@ -1,8 +1,6 @@
 #pragma once
 
 #include "declarations.h"
-#include "assert.h"
-#include "MnistDataset.h"
 
 namespace nn {
 Vector OneHotEncoding(uint8_t object, Index number_of_categories);

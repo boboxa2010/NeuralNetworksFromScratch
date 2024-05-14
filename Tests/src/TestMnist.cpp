@@ -1,9 +1,9 @@
-#include "TestMnist.h"
+#include "../inc/TestMnist.h"
 
 #include <iostream>
 
-#include "../Network.h"
-#include "../utils.h"
+#include "../Library/inc/MnistDataset.h"
+#include "../Library/inc/Network.h"
 
 namespace {
 nn::Scalar CalculateAccuracy(const nn::Network &net, const nn::Data &test) {
@@ -19,13 +19,13 @@ nn::Scalar CalculateAccuracy(const nn::Network &net, const nn::Data &test) {
 }
 void test::TestMnist() {
     nn::Data train =
-        nn::mnist::LoadData("../data/train-images.idx3-ubyte", "../data/train-labels.idx1-ubyte");
+        nn::mnist::LoadData("../../../data/train-images.idx3-ubyte", "../../../data/train-labels.idx1-ubyte");
     nn::Data test =
-        nn::mnist::LoadData("../data/t10k-images.idx3-ubyte", "../data/t10k-labels.idx1-ubyte");
+        nn::mnist::LoadData("../../../data/t10k-images.idx3-ubyte", "../../../data/t10k-labels.idx1-ubyte");
 
-    nn::Network net1({784, 90, 10}, {nn::Sigmoid(), nn::SoftMax()});
+    nn::Network net1({784, 32, 90, 10}, {nn::ReLu(), nn::Sigmoid(), nn::SoftMax()});
     nn::LossFunction loss = nn::MSE();
-    nn::LearningRate lr = nn::Constant(3);
+    nn::LearningRate lr = nn::Constant(1);
     net1.Train(train, 10, 32, loss, lr, test);
     std::cout << "Accuracy: " << CalculateAccuracy(net1, test) << '\n';
 }

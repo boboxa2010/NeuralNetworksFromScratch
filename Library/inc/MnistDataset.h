@@ -2,17 +2,10 @@
 
 #include <filesystem>
 #include <fstream>
-#include <vector>
 
 #include "declarations.h"
 
 namespace nn {
-
-struct Data {
-    Matrix X;
-    Matrix y;
-};
-
 namespace mnist {
 class Labels {
 public:

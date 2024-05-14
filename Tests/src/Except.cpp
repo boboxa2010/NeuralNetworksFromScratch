@@ -1,4 +1,4 @@
-#include "Except.h"
+#include "../inc/Except.h"
 
 #include <iostream>
 #include <stdexcept>
