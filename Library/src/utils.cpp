@@ -32,10 +32,11 @@ uint32_t ConvToLittleEndian(uint32_t n) {
 }
 
 Data ShuffleData(const Data &data) {
+    static std::mt19937 gen{kSeed};
     Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(data.X.cols());
     perm.setIdentity();
     std::shuffle(perm.indices().data(), perm.indices().data() + perm.indices().size(),
-                 std::mt19937(std::random_device()()));
+                 gen);
     return Data{data.X * perm, data.y * perm};
 }
 
