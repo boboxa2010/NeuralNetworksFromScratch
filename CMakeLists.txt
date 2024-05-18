@@ -6,8 +6,7 @@ set(CMAKE_CXX_EXTENSIONS Off)
 
 project(NeuralNetworksFromScratch)
 
-set(EIGEN_DIR "/home/ivan/Desktop/eigen-3.4.0")
-include_directories(${EIGEN_DIR})
+include_directories(eigen)
 include_directories(EigenRand)
 
 add_subdirectory(Library)
