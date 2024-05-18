@@ -12,4 +12,3 @@ include_directories(EigenRand)
 
 add_subdirectory(Library)
 add_subdirectory(Tests)
-
