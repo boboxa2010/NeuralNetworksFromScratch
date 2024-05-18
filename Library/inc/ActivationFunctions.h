@@ -31,7 +31,7 @@ public:
 };
 }  // namespace activation_function
 
-using ActivationFunction = Any<activation_function::Interface, activation_function::Impl>;
+using ActivationFunction = iternal::Any<activation_function::Interface, activation_function::Impl>;
 
 class ElemWiseFunction {
     using FuncT = std::function<Scalar(Scalar)>;

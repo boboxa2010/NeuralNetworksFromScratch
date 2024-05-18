@@ -3,6 +3,8 @@
 #include <memory>
 #include <type_traits>
 
+namespace nn {
+namespace iternal {
 template <template <typename> typename IAny, template <typename> typename Impl>
 class Any {
     class Concept;
@@ -91,3 +93,5 @@ private:
 
     std::unique_ptr<Concept> model_;
 };
+}  // namespace iternal
+}  // namespace nn

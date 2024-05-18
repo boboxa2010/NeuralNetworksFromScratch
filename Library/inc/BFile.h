@@ -3,12 +3,14 @@
 #include "filesystem"
 #include "fstream"
 
+namespace nn {
+namespace iternal {
 template <typename T>
 class BFile {
     using Data = typename T::Data;
+
 public:
-    explicit BFile(const std::filesystem::path& file_name) {
-        file_.open(file_name, std::ios::binary);
+    explicit BFile(const std::filesystem::path& file_name) : file_(file_name, std::ios::binary) {
         if (!file_.is_open()) {
             throw std::invalid_argument{"Cannot open file"};
         }
@@ -21,3 +23,5 @@ public:
 private:
     std::ifstream file_;
 };
+}  // namespace iternal
+}  // namespace nn

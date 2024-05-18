@@ -22,7 +22,7 @@ public:
 };
 }  // namespace learning_rate
 
-using LearningRate = Any<learning_rate::ILearningRate, learning_rate::ImplLearningRate>;
+using LearningRate = iternal::Any<learning_rate::ILearningRate, learning_rate::ImplLearningRate>;
 
 class VowpalWabbit {
 public:

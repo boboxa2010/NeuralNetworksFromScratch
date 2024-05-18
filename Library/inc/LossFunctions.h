@@ -27,7 +27,7 @@ public:
     }
 };
 }  // namespace details
-using LossFunction = Any<details::ILossFunction, details::ImplLossFunction>;
+using LossFunction = iternal::Any<details::ILossFunction, details::ImplLossFunction>;
 
 class MSE {
 public:

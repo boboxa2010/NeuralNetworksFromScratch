@@ -13,7 +13,7 @@ Network::Network(std::initializer_list<Index> dimensions,
     auto dim = dimensions.begin();
     for (auto it = functions.begin(); it != functions.end(); ++it, ++dim) {
         layers_.emplace_back(Input(*dim), Output(*std::next(dim)),
-                             std::move(ActivationFunction(*it)));
+                             ActivationFunction(*it));
     }
 }
 

@@ -20,6 +20,12 @@ nn::Vector GetNormalizedImage(const std::array<uint8_t, kMnistNumberOfPixels> &i
     }
     return normalized_image;
 }
+
+uint32_t ReadUint32(std::ifstream *file) {
+    uint32_t number;
+    file->read(reinterpret_cast<char *>(&number), sizeof(number));
+    return number;
+}
 }  // namespace
 
 namespace nn::mnist {
@@ -28,14 +34,8 @@ Labels::Data Labels::Read(std::ifstream *file) {
 }
 
 uint32_t Labels::ReadHeader(std::ifstream *file) {
-    uint32_t magic_number;
-    uint32_t number_of_labels;
-
-    file->read(reinterpret_cast<char *>(&magic_number), sizeof(magic_number));
-    file->read(reinterpret_cast<char *>(&number_of_labels), sizeof(number_of_labels));
-
-    magic_number = ConvToLittleEndian(magic_number);
-    number_of_labels = ConvToLittleEndian(number_of_labels);
+    uint32_t magic_number = ConvToLittleEndian(ReadUint32(file));
+    uint32_t number_of_labels = ConvToLittleEndian(ReadUint32(file));
 
     if (magic_number != kMnistLabelMagicNumber) {
         throw std::invalid_argument{"Invalid format of input file"};
@@ -61,20 +61,10 @@ Images::Data Images::Read(std::ifstream *file) {
 }
 
 Images::Header Images::ReadHeader(std::ifstream *file) {
-    uint32_t magic_number;
-    uint32_t number_of_images;
-    uint32_t number_of_rows;
-    uint32_t number_of_columns;
-
-    file->read(reinterpret_cast<char *>(&magic_number), sizeof(magic_number));
-    file->read(reinterpret_cast<char *>(&number_of_images), sizeof(number_of_images));
-    file->read(reinterpret_cast<char *>(&number_of_rows), sizeof(number_of_rows));
-    file->read(reinterpret_cast<char *>(&number_of_columns), sizeof(number_of_columns));
-
-    magic_number = ConvToLittleEndian(magic_number);
-    number_of_images = ConvToLittleEndian(number_of_images);
-    number_of_rows = ConvToLittleEndian(number_of_rows);
-    number_of_columns = ConvToLittleEndian(number_of_columns);
+    uint32_t magic_number = ConvToLittleEndian(ReadUint32(file));
+    uint32_t number_of_images = ConvToLittleEndian(ReadUint32(file));
+    uint32_t number_of_rows = ConvToLittleEndian(ReadUint32(file));
+    uint32_t number_of_columns = ConvToLittleEndian(ReadUint32(file));
 
     if (magic_number != kMnistImageMagicNumber) {
         throw std::invalid_argument{"Invalid format of input file"};
@@ -84,7 +74,7 @@ Images::Header Images::ReadHeader(std::ifstream *file) {
         throw std::invalid_argument("Invalid width of input file");
     }
 
-    if (number_of_rows != kMnistImageNumberColumn) {
+    if (number_of_columns != kMnistImageNumberColumn) {
         throw std::invalid_argument("Invalid height of input file");
     }
     return Header{number_of_images, number_of_rows, number_of_columns};
@@ -105,8 +95,8 @@ Images::Data Images::ReadImages(std::ifstream *file) {
 }
 
 Data LoadData(const std::filesystem::path &images_path, const std::filesystem::path &labels_path) {
-    BFile<Images> images(images_path);
-    BFile<Labels> labels(labels_path);
+    iternal::BFile<Images> images(images_path);
+    iternal::BFile<Labels> labels(labels_path);
 
     Data dataset;
     dataset.X = images.ReadData();
